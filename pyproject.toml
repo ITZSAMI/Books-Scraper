@@ -1,0 +1,16 @@
+[project]
+name = "books-etl"
+version = "1.0.0"
+description = "ETL pipeline: books.toscrape.com -> typed, validated records -> SQLite"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
