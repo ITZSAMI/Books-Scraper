@@ -8,10 +8,10 @@ from __future__ import annotations
 
 import argparse
 import logging
-import sqlite3
 import sys
+import traceback
 
-from books_etl import pipeline, reports
+from books_etl import load, pipeline, reports
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -31,19 +31,30 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
     logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        force=True,  # replace any handlers set up earlier, so progress always shows
     )
 
     if args.command == "run":
         try:
             summary = pipeline.run(args.db, args.csv or None, args.max_pages)
         except Exception:
+            # Never fail silently: print the full error straight to stderr, so it
+            # shows even if logging was configured elsewhere.
+            print("run failed:", file=sys.stderr)
+            traceback.print_exc()
             return 1
         print(summary)
         return 0
 
-    with sqlite3.connect(args.db) as conn:
-        print(reports.run_report(conn, args.name).to_string(index=False))
+    # load.connect creates the tables if needed, so reports work on a new database.
+    conn = load.connect(args.db)
+    try:
+        df = reports.run_report(conn, args.name)
+    finally:
+        conn.close()
+    print(df.to_string(index=False) if not df.empty else "(no rows yet: run the pipeline first)")
     return 0
 
 

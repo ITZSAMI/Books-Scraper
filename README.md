@@ -102,7 +102,7 @@ All report queries live in [`sql/reports.sql`](sql/reports.sql):
 ## Running the tests
 
 ```bash
-pytest -v          # 37 tests, no network needed
+pytest -v          # 40 tests, no network needed
 ruff check .       # lint
 ```
 
