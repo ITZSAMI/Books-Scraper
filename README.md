@@ -72,7 +72,7 @@ Full definitions with constraints: [`sql/schema.sql`](sql/schema.sql).
 
 ## Quick start
 
-Requires Python 3.10+.
+Requires Python 3.11+.
 
 ```bash
 git clone https://github.com/ITZSAMI/Books-Scraper.git
@@ -106,7 +106,7 @@ pytest -v          # 37 tests, no network needed
 ruff check .       # lint
 ```
 
-CI runs lint and tests on Python 3.10–3.13 for every push and pull request.
+CI runs lint and tests on Python 3.11–3.15 for every push and pull request.
 
 ## Runbook
 
